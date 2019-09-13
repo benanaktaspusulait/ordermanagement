@@ -1,0 +1,154 @@
+
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+}
+
+ext {
+    jjwt = '0.10.5'
+    postgresql = '42.2.1'
+    springfox = '2.9.2'
+    modelmapper = '2.3.3'
+    javafaker = '0.15'
+    h2 = '1.4.197'
+    jackson = '2.9.8'
+    junit = '5.3.1'
+    lombok = '1.18.6'
+    zolando = '0.22.0'
+    cucumber_version = '4.3.1'
+    springoauth2 = '2.1.4.RELEASE'
+}
+
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:$lombok"
+        annotationProcessor "org.projectlombok:lombok:$lombok"
+        testCompileOnly "org.projectlombok:lombok:$lombok"
+        testAnnotationProcessor "org.projectlombok:lombok:$lombok"
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junit"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit"
+    }
+
+    subprojects {
+        bootJar {
+            enabled = false
+        }
+
+        jar {
+            enabled = true
+        }
+    }
+
+    jar {
+        exclude('application-dev.yml',
+                'application-local.yml',
+                'schema.sql',
+                'import.sql')
+    }
+
+
+    compileJava.dependsOn(processResources)
+
+    dependencies {
+  
+        implementation 'com.sendgrid:sendgrid-java:4.4.1'
+
+        compile 'org.springframework.boot:spring-boot-autoconfigure'
+        compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+        compile 'org.springframework.boot:spring-boot-starter-security'
+        compile 'org.springframework.boot:spring-boot-starter-web'
+        compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        compile 'org.springframework.boot:spring-boot-starter-logging'
+        compile 'org.springframework.security:spring-security-data'
+        compile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$springoauth2"
+        compile "org.springframework.boot:spring-boot-starter-data-rest"
+        compile group: 'org.apache.commons', name: 'commons-pool2', version: '2.6.2'
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson"
+        compile "io.springfox:springfox-swagger2:$springfox"
+        compile "io.springfox:springfox-swagger-ui:$springfox"
+        compile "org.modelmapper:modelmapper:$modelmapper"
+        compile "com.github.javafaker:javafaker:$javafaker"
+        compile "io.cucumber:cucumber-java:$cucumber_version"
+        compile "io.cucumber:cucumber-junit:$cucumber_version"
+        compile "io.cucumber:cucumber-spring:$cucumber_version"
+        compile group: 'joda-time', name: 'joda-time', version: '2.10.3'
+
+        compile "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"
+        compile group: 'org.springframework.data', name: 'spring-data-rest-core', version: '3.1.8.RELEASE'
+
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.1.5.RELEASE'
+        compile group: 'com.sendgrid', name: 'sendgrid-java', version: '4.4.1'
+        compile group: 'com.messente', name: 'messente-sdk', version: '1.0.1'
+
+        compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '6.1'
+
+        compile 'org.tuxdude.logback.extensions:logback-colorizer:1.0.1'
+
+        compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
+
+        compile "io.jsonwebtoken:jjwt-api:$jjwt"
+        runtime "io.jsonwebtoken:jjwt-impl:$jjwt"
+        runtime "io.jsonwebtoken:jjwt-jackson:$jjwt"
+
+        compile 'org.springframework.boot:spring-boot-starter-actuator'
+
+        compile 'com.vladmihalcea:hibernate-types-52:2.5.0'
+        runtime "org.postgresql:postgresql:$postgresql"
+        runtimeOnly "com.h2database:h2:$h2"
+
+        testCompile 'io.rest-assured:rest-assured:4.0.0'
+        compile 'io.rest-assured:json-path:4.0.0'
+        compile 'io.rest-assured:xml-path:4.0.0'
+        testCompile 'io.rest-assured:json-schema-validator:4.0.0'
+        testCompile 'io.rest-assured:spring-mock-mvc:4.0.0'
+        testCompile 'io.rest-assured:spring-web-test-client:4.0.0'
+
+        testCompile 'com.konghq:unirest-java:2.3.08:standalone'
+
+    }
+
+    configurations {
+        cucumberRuntime {
+            extendsFrom testImplementation
+        }
+    }
+
+    task cucumber() {
+        dependsOn assemble, compileTestJava
+        doLast {
+            javaexec {
+                main = "cucumber.api.cli.Main"
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+            }
+        }
+    }
+
+    test.onlyIf { !project.hasProperty('skipTest') }
+}

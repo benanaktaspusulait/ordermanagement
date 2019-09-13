@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m %X{requestId} %X{authenticatedUser}%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m %X{requestId} %X{authenticatedUser}%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <logger name="javax.activation" level="DEBUG"/>
+    <logger name="javax.mail" level="DEBUG"/>
+    <logger name="javax.management.remote" level="DEBUG"/>
+    <logger name="javax.xml.bind" level="DEBUG"/>
+    <logger name="ch.qos.logback" level="DEBUG"/>
+    <logger name="com.ryantenney" level="DEBUG"/>
+    <logger name="com.sun" level="DEBUG"/>
+    <logger name="com.zaxxer" level="DEBUG"/>
+    <logger name="io.undertow" level="DEBUG"/>
+    <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+    <logger name="org.ehcache" level="DEBUG"/>
+    <logger name="org.apache" level="DEBUG"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.bson" level="DEBUG"/>
+    <logger name="org.hibernate" level="DEBUG"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.springframework.web" level="DEBUG"/>
+    <logger name="org.springframework.security" level="DEBUG"/>
+    <logger name="org.springframework.cache" level="DEBUG"/>
+    <logger name="org.thymeleaf" level="DEBUG"/>
+    <logger name="org.xnio" level="DEBUG"/>
+    <logger name="springfox" level="DEBUG"/>
+    <logger name="sun.rmi" level="DEBUG"/>
+    <logger name="liquibase" level="DEBUG"/>
+    <logger name="LiquibaseSchemaResolver" level="INFO"/>
+    <logger name="sun.rmi.transport" level="DEBUG"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.jpa" level="INFO"/>
+
+    <logger name="com.cgi.ordermanagement.config.log.DefaultRequestLoggingFilter" level="DEBUG"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.quartz" level="DEBUG"/>
+    <logger name="com.amazonaws" level="DEBUG"/>
+    <logger name="org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer" level="INFO"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+</configuration>
