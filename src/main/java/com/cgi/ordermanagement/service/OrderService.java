@@ -2,9 +2,6 @@ package com.cgi.ordermanagement.service;
 
 import com.cgi.ordermanagement.model.dto.order.CreateOrderDTO;
 import com.cgi.ordermanagement.model.dto.order.OrderDTO;
-import com.cgi.ordermanagement.model.dto.order.OrderStatusChangeDTO;
-import com.cgi.ordermanagement.model.enums.order.OrderStatus;
-import com.cgi.ordermanagement.model.enums.order.OrderType;
 import com.cgi.ordermanagement.model.order.Order;
 import com.cgi.ordermanagement.repository.order.OrderRepository;
 import com.cgi.ordermanagement.service.base.BaseService;
@@ -16,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -76,16 +71,6 @@ public class OrderService extends BaseService<OrderDTO, OrderRepository> {
     }
 
     /**
-     * update an existing Order Status
-     * @param dto
-     */
-    @Transactional
-    public void updateOrderStatus(OrderStatusChangeDTO dto) {
-        log.debug("Request to change status Order : {}", dto);
-        orderRepository.changeOrderStatus(dto.getOrderStatus(),dto.getId());
-    }
-
-    /**
      * to get all orders pageable
      * @param pageable
      * @return
@@ -94,19 +79,5 @@ public class OrderService extends BaseService<OrderDTO, OrderRepository> {
         return orderRepository.findAll(pageable).map(order -> modelMapper.map(order, OrderDTO.class));
     }
 
-    /**
-     * to get live order
-     * @param orderStatus
-     * @return
-     */
-    public Map<OrderType,Map<Double,Double>> findByOrderStatus( OrderStatus orderStatus) {
 
-        Map<OrderType,Map<Double,Double>> priceQuantityMap = orderRepository.findByOrderStatus(orderStatus).stream()
-                .map(order -> modelMapper.map(order, OrderDTO.class))
-                .collect(Collectors.toList())
-                .stream().collect(Collectors.groupingBy(OrderDTO::getOrderType,
-                        Collectors.groupingBy(OrderDTO::getPrice, Collectors.summingDouble(OrderDTO::getQuantity))));
-
-        return priceQuantityMap;
-    }
 }

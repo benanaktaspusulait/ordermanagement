@@ -14,11 +14,5 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface OrderRepository extends AuditBaseRepository<Order, Long> {
 
-    List<Order> findByOrderStatus(OrderStatus orderStatus);
-
-    @Transactional
-    @Modifying
-    @Query("update Order o set o.orderStatus = :orderStatus where o.id = :id")
-    int changeOrderStatus(@Param(value = "orderStatus") OrderStatus cardStatus, @Param(value = "id") Long id);
 
 }
