@@ -32,7 +32,7 @@ public class OrderResource {
 
     @ApiOperation(value = "Create an order")
     @PostMapping
-    @RolesAllowed(value = {Rights.ADMIN})
+    @RolesAllowed(value = {Rights.ADMIN, Rights.ORDER})
     public ResponseEntity<?> create(@RequestBody @Valid CreateOrderDTO dto) throws AppException {
 
         log.debug("REST funds to save OrderDTO: {}", dto);
@@ -42,7 +42,7 @@ public class OrderResource {
     @ResponseBody
     @ApiOperation(value = "Search a order with an ID", response = OrderDTO.class)
     @GetMapping(value = "/{id}")
-    @RolesAllowed(value = {Rights.ADMIN})
+    @RolesAllowed(value = {Rights.ADMIN, Rights.ORDER})
     public ResponseEntity<?> get(@PathVariable Long id) throws AppException {
 
         log.debug("REST funds to get Order : {}", id);
@@ -58,7 +58,7 @@ public class OrderResource {
 
     @ApiOperation(value = "Update a order")
     @PatchMapping
-    @RolesAllowed(value = {Rights.ADMIN})
+    @RolesAllowed(value = {Rights.ADMIN, Rights.ORDER})
     public ResponseEntity<?> update(@RequestBody @Valid OrderDTO orderDTO) throws AppException {
 
         log.debug("REST funds to update basket : {}", orderDTO);
@@ -82,7 +82,7 @@ public class OrderResource {
     }
 
     @DeleteMapping(value = "/{id}")
-    @RolesAllowed(value = {Rights.ADMIN})
+    @RolesAllowed(value = {Rights.ADMIN, Rights.ORDER})
     public ResponseEntity<?> delete(@PathVariable Long id) throws AppException {
 
         log.debug("REST funds to delete product : {}", id);
