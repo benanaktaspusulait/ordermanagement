@@ -1,12 +1,8 @@
 package com.cgi.ordermanagement.resource.v1;
 
 import com.cgi.ordermanagement.exception.AppException;
-import com.cgi.ordermanagement.model.dto.error.GenericResponseDTO;
 import com.cgi.ordermanagement.model.dto.order.CreateOrderDTO;
 import com.cgi.ordermanagement.model.dto.order.OrderDTO;
-import com.cgi.ordermanagement.model.dto.order.OrderStatusChangeDTO;
-import com.cgi.ordermanagement.model.dto.system.ErrorDTO;
-import com.cgi.ordermanagement.model.enums.order.OrderStatus;
 import com.cgi.ordermanagement.service.OrderService;
 import com.cgi.ordermanagement.util.Rights;
 import io.micrometer.core.annotation.Timed;
@@ -14,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -44,35 +39,11 @@ public class OrderResource {
         return new ResponseEntity<>(orderService.save(dto), HttpStatus.CREATED);
     }
 
-
-    @RolesAllowed(value = {Rights.USER, Rights.ADMIN})
-    @PatchMapping("/changeStatus")
-    @ApiOperation(value = "Update Order Status to change with an ID", produces = "application/json", response = GenericResponseDTO.class)
-    public ResponseEntity<?> changeOrderStatus(@RequestBody @Valid OrderStatusChangeDTO dto) throws AppException {
-        orderService.updateOrderStatus(dto);
-        return new ResponseEntity(new GenericResponseDTO(ErrorDTO.ResponseCodes.SUCCESS), HttpStatus.OK);
-    }
-
-    @Timed
-    @ApiOperation(value = "Get all orders ", produces = "application/json")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "", response = OrderDTO.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 401, message = "Access is denied")
-
-    })
-    @GetMapping("/liveOrders")
-    public ResponseEntity<?> findAllLiveOrders() throws AppException {
-
-        log.debug("REST request to get getAll countries");
-        return new ResponseEntity<>(orderService.findByOrderStatus( OrderStatus.WAITING), HttpStatus.OK);
-    }
-
     @ResponseBody
     @ApiOperation(value = "Search a order with an ID", response = OrderDTO.class)
     @GetMapping(value = "/{id}")
     @RolesAllowed(value = {Rights.ADMIN})
-    public ResponseEntity<?> get(@PathVariable Long id) throws AppException, NotFoundException {
+    public ResponseEntity<?> get(@PathVariable Long id) throws AppException {
 
         log.debug("REST funds to get Order : {}", id);
 
@@ -93,7 +64,7 @@ public class OrderResource {
         log.debug("REST funds to update basket : {}", orderDTO);
         return new ResponseEntity<>(orderService.update(orderDTO), HttpStatus.OK);
     }
-    
+
     @Timed
     @ApiOperation(value = "Get all orders ", produces = "application/json")
     @ApiResponses(value = {

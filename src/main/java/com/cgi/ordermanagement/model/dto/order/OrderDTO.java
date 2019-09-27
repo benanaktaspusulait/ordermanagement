@@ -23,11 +23,7 @@ public class OrderDTO extends AuditBaseDTO {
 
         entity = entity == null ? new Order() : entity;
         entity.setId(dto.getId());
-        entity.setQuantity(dto.getQuantity());
-        entity.setPrice(dto.getPrice());
-        entity.setOrderType(dto.getOrderType());
-        entity.setOrderStatus(dto.getOrderStatus());
-        entity.setUserId(dto.getUserId());
+
         return entity;
     }
 
